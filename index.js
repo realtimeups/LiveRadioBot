@@ -99,4 +99,21 @@ bot.on("message", function (message) {
     }
 });
 
-bot.login(config.email, config.password);
+// bot.login(config.email, config.password);
+
+/* Login */
+console.log("Logging in...");
+bot.loginWithToken(config.tokenID, (err, token) => {
+	if (err) {
+		console.log(err);
+		setTimeout(() => {
+			process.exit(1);
+		}, 2000);
+	}
+	if (!token) {
+		console.log(cWarn(" WARN ") + " failed to connect");
+		setTimeout(() => {
+			process.exit(0);
+		}, 2000);
+	}
+});
