@@ -4,11 +4,6 @@ var config = require("./config.json");
 
 var radio = require("./radio.json");
 
-var Spotify = require("spotify-web");
-
-var soundcloudr = require('soundcloudr');
-soundcloudr.setClientId(config.soundcloudcid);
-
 var bot = new Discord.Client();
 
 var inChannel = false;
@@ -65,39 +60,6 @@ bot.on("message", function (message) {
                 }
                 bot.voiceConnection.playFile(rstat.url);
                 bot.setStatus("idle", rstat.name);
-        }
-        
-        if (cmdTxt === "spotify" && inChannel) {
-            if (suffix) {
-                Spotify.login(config.spotifyuser, config.spotifypass, function (err, spotify) {
-                    if (err) throw err;
-                  
-                    spotify.get(suffix, function (err, track) {
-                        if (err) {
-                            bot.sendMessage(message.channel, "An error occured: " + err);
-                        } else {
-                            bot.sendMessage(message.channel, "Playing **" + track.name + "** by **" + track.artist[0].name + "**");
-                            bot.setStatus("idle", track.name + " by " + track.artist[0].name);
-                            bot.voiceConnection.playRawStream(track.play().on('finish', function () { bot.setStatus("idle"); spotify.disconnect(); }) );
-                        }
-                    });
-                });
-            } else {
-                bot.sendMessage(message.channel, "Please specify a Spotify track URI");
-            }
-        }
-        
-        if (cmdTxt === "soundcloud" && inChannel) {
-            if (suffix) {                
-                soundcloudr.getStreamUrl(suffix, function(err, url) {
-                    if (err) {
-                        bot.sendMessage(message.channel, "An error occured: " + err.message);
-                    } else {
-                        bot.voiceConnection.playFile(url);
-                        //bot.setStatus("idle", "SoundCloud track"); // TODO: fetch track name
-                    }
-                });
-            }
         }
         
         if (cmdTxt === "join") {
