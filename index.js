@@ -63,34 +63,49 @@ bot.on("message", function (message) {
         }
         
         if (cmdTxt === "join") {
-            if (suffix) {
-                for (var channel of message.channel.server.channels) {
-                    if (!suffix || channel.name === suffix) {
-                        bot.joinVoiceChannel(channel, function (error) {
-                            if (error != null) {
+			if (message.author.id == config.OwnerID){
+                if (suffix) {
+                    for (var channel of message.channel.server.channels) {
+                        if (!suffix || channel.name === suffix) {
+                            bot.joinVoiceChannel(channel, function (error) {
+                                if (error != null) {
                                 console.log(error);
                                 process.exit(1);
-                            }
-                        });
-                        inChannel = true;
+                                }
+                            });
+                            inChannel = true;
+                        }
                     }
                 }
             }
+			if (message.author.id != config.OwnerID){
+			bot.sendMessage(message.channel,"```ERROR, You do have permission to use this command!```");	
+			}
         }
-        
+		
         if (cmdTxt === "leave") {
-            if (inChannel) {
-                bot.setStatus("idle");
-                bot.leaveVoiceChannel();
-                inChannel = false;
-            }
+			if (message.author.id == config.OwnerID){
+                if (inChannel) {
+                    bot.setStatus("idle");
+                    bot.leaveVoiceChannel();
+                    inChannel = false;
+                }
+			}			
+			if (message.author.id != config.OwnerID){
+			bot.sendMessage(message.channel,"```ERROR, You do have permission to use this command!```");	
+			}
         }
         
         if (cmdTxt === "stop") {
-            if (inChannel) {
-                bot.voiceConnection.stopPlaying();
-                bot.setStatus("idle");
-            }
+			if (message.author.id == config.OwnerID){
+                if (inChannel) {
+                    bot.voiceConnection.stopPlaying();
+                    bot.setStatus("idle");
+                }
+			}
+			if (message.author.id != config.OwnerID){
+			bot.sendMessage(message.channel,"```ERROR, You do have permission to use this command!```");	
+			}
         }
         
         if (message.author == bot.user) {
